@@ -1,14 +1,17 @@
-from typing import Optional
-
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 
 app = FastAPI()
 
+# To store the last POST request's URL and body
+last_post = {}
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+@app.post("/{path:path}")
+async def post_data(path: str, request: Request):
+    body = await request.json()
+    last_post["url"] = f"/{path}"
+    last_post["body"] = body
+    return {"message": "Data received"}
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    return {"item_id": item_id, "q": q}
+@app.get("/data")
+def get_data():
+    return last_post
