@@ -12,6 +12,13 @@ async def post_data(path: str, request: Request):
     last_post["body"] = body
     return {"message": "Data received"}
 
+@app.get("/callback")
+async def post_data(request: Request):
+    body = await request.json()
+    last_post["url"] = f"/{request.path_params}"
+    last_post["body"] = body
+    return {"message": "Data received"}
+
 @app.get("/data")
 def get_data():
     return last_post
